@@ -1,0 +1,109 @@
+<!-- Showing defects and filter  -->
+{% extends "inputcs/base.html" %}
+
+{% block title %} Defect Detail {% endblock %}
+
+{% load static %}
+
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12s col-lg-7">
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted">Lexus RX - Car Body</span>
+            <!-- <span class="badge bg-secondary rounded-pill">3</span> -->
+          </h4>
+        <img src="{% static 'images/RX910.jpg' %}" id="reference-img" alt="" style="display: none"/>
+            <div>
+                <canvas width="800" height="852" id="drawing-canvas">
+    
+                </canvas>
+            </div>
+                <div style="padding-top:20px;">
+                    <div id="coord"></div>
+                </div>
+    </div>
+
+</div>
+<div class="row">
+    <h2>Defect Detail</h2>
+        <div class="table-responsive">
+                    Process: {{ defect.process }}
+                    <br>
+                    <span> Defect: {{defect.defect}}</span>
+                    <span>
+                        <br>
+                        <span> Side: {{defect.side}}</span>
+                        <br>
+                        <span> Location: {{defect.location}}</span>
+                    <!-- {% for loc in def.queryset.all %}
+                      {{ loc }}
+                    {% endfor %} -->
+                    </span>
+                    <br>
+                    <span>Date and time: {{ defect.created }}</span>
+                    <br>
+                    <span>Photo : 
+                        {% if defect.photo %}
+                        <img src ="{{ defect.photo.url }}" width="100%" alt="Banner image">
+                        {% endif %}
+                    </span>
+                    <br>
+                    
+                
+                <hr /> 
+            
+        </div>
+    </div>
+       
+{% endblock %}
+ {% block javascript %}
+        <script >
+    
+            var canvas;
+            var ctx;
+            var refImage;
+    
+            $(document).ready(function() {
+            canvas = document.getElementById('drawing-canvas');
+            ctx = canvas.getContext('2d');
+            refImage = document.getElementById('reference-img');
+            drawImageScaled(refImage, ctx);
+                ctx.font = '22px normal'
+                ctx.fillStyle = 'red';
+                
+                ctx.fillText("{{ defect.id }}", "{{defect.coorx}}", "{{defect.coory}}");
+                
+            // $(canvas).click(function(e) {
+            //     const offset = $(this).offset();
+            //     const x = (e.pageX - offset.left) - 5;
+            //     const y = (e.pageY - offset.top) + 10;
+            //     ctx.font = '22px normal'
+            //     ctx.fillStyle = 'red';
+            //     ctx.fillText("{{ i.id }}", x, y);
+                // console.log(ctx, refImage)
+                // console.log(x, y);
+                // console.log(e.pageX);
+                // console.log(offset);
+            });
+    
+            function drawImageScaled(img, ctx) {
+            var canvas = ctx.canvas;
+            var hRatio = canvas.width / img.width;
+            var vRatio = canvas.height / img.height;
+            var ratio  = Math.min ( hRatio, vRatio );
+            var centerShift_x = ( canvas.width - img.width*ratio ) / 2;
+            var centerShift_y = ( canvas.height - img.height*ratio ) / 2;  
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            ctx.drawImage(img, 0,0, img.width, img.height,
+                                centerShift_x,centerShift_y,img.width*ratio, img.height*ratio);
+            }
+    
+    
+        </script>
+
+
+
+
+        {% endblock %}

@@ -1,0 +1,125 @@
+{% extends 'inputcs/base.html' %}
+{% load static %}
+{% load bootstrap %}
+
+
+{% block content %}
+{% load crispy_forms_tags %}
+
+<div class="row">
+
+      <div class="col-md-7 col-lg-7">
+        <h4 class="mb-3">Input Defects - RX - Car Body </h4>
+        <p> Click on the image to add a defect </p>
+    
+    
+        <div style="width:300px;">
+            <img src="{% static 'images/RX910.jpg' %}" id="reference-img" alt="" style="display: none"/>
+            <div><canvas width="800"   height="850" id="drawing-canvas" style="border:1px solid #000000;"></canvas></div>
+            <div style="padding-top:20px;">
+                <div id="coord"></div>
+            </div>
+        </div>
+        <div class="row">
+          
+        <a class="alert-link" href="{% url 'input'%}"> Clear input </a>
+          
+        </div>
+      </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h4>Complete the form and click submit</h4>
+    </div>
+  </div>
+  <div class="row">
+
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {{ form|bootstrap }}
+    
+<br>
+<div class="row">
+<div class="col">
+  <input id = "coorx" type="hidden" name="coorx" maxlength="20" required="" >    
+  <input id = "coory" type="hidden" name="coory" maxlength="20" required="" >
+  <input id = "side" type="hidden" name="side" maxlength="20" required="" >        
+  <tr>
+    
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+  
+      {% block javascript %}
+
+        <script>
+          
+
+          var canvas;
+          var ctx;
+          var refImage;
+
+          $(document).ready(function() {
+            canvas = document.getElementById('drawing-canvas');
+            ctx = canvas.getContext('2d');
+            refImage = document.getElementById('reference-img');
+            drawImageScaled(refImage, ctx);            
+          
+            $(canvas).click(function(e) {
+              const offset = $(this).offset();
+              const x = (e.pageX - offset.left) - 5;
+              const y = (e.pageY - offset.top) + 10;
+              ctx.font = '22px normal'
+              ctx.fillStyle = 'red';
+              
+              if (ctx.fillText) {
+                var answer = window.confirm("Save data?");
+                  if (answer) {
+                      ctx.fillText('X', x, y);
+                      $(canvas).off('click');//some code
+                    }
+                  else {
+                  context.clearRect(0, 0, canvas.width, canvas.height);
+                  }
+                }       
+              // console.log(x, y);
+              document.getElementById('coorx').value = x;
+              document.getElementById('coory').value = y;
+
+              if (x < 294) {
+                (document.getElementById('side').value = 'LH');}
+                else {
+                  (document.getElementById('side').value = 'RH');
+                }
+
+                }
+              
+            );
+            
+          });
+          
+          function drawImageScaled(img, ctx) {
+            var canvas = ctx.canvas;
+            var hRatio = canvas.width / img.width;
+            var vRatio = canvas.height / img.height;
+            var ratio  = Math.min ( hRatio, vRatio );
+            var centerShift_x = ( canvas.width - img.width*ratio ) / 2;
+            var centerShift_y = ( canvas.height - img.height*ratio ) / 2;  
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            ctx.drawImage(img, 0,0, img.width, img.height,
+                                centerShift_x,centerShift_y,img.width*ratio, img.height*ratio);  
+            }
+          
+          
+        </script>
+
+
+      {% endblock %}   
+
+      
+       
+                
+{% endblock %}

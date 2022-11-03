@@ -1,0 +1,154 @@
+{% extends "inputcs/base.html" %}
+{% load static %}
+
+
+{% block title %} Defects Filters {% endblock %}
+
+
+{% block content %}
+
+    <main role="main" class="container">
+        <h3>Filter Defects</h3>
+        <form action="." method="GET">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-12">
+                    <div class="input-group">
+                        <input class="form-control py-2 border-right-0 border" type="search" name="process_contains" placeholder="Process contains...." />
+                        <span class="input-group-append">
+                        <div class="input-group-text bg-transparent">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </span>
+
+
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="form-row">
+                <div class="form-group col-12">
+                    <div class="input-group">
+                        <input class="form-control py-2 border-right-0 border" type="search" name="id_exact" placeholder="Id exact...." />
+                        <span class="input-group-append">
+                        <div class="input-group-text bg-transparent">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </span>
+
+
+                    </div>
+                </div>
+            </div> -->
+            <br>
+            <div class="form-row">
+                <div class="form-group col-12">
+                    <div class="input-group">
+                        <input class="form-control py-2 border-right-0 border" type="search" name="defect_contains" placeholder="Defects contains...." />
+                        <span class="input-group-append">
+                        <div class="input-group-text bg-transparent">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </span>
+
+
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="form-row">
+                <div class="form-group col-12">
+                    <div class="input-group">
+                        <input class="form-control py-2 border-right-0 border" type="search" name="location_contains" placeholder="Location contains...." />
+                        <span class="input-group-append">
+                        <div class="input-group-text bg-transparent">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </span>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="py-3 my-3"></div> -->
+            <div class="form-row ">
+                <!-- <div class="form-group col-md-6 col-lg-6">
+                    <label for="viewCountMin ">Min View Count</label>
+                    <input type="number" name="view_count_min" min="0" class="form-control " id="viewCountMin" placeholder="0">
+                </div>
+                <div class="form-group col-md-6 col-lg-6">
+                    <label for="viewCountMax ">Max View Count</label>
+                    <input type="number" name="view_count_max" min="0" class="form-control " id="viewCountMax " placeholder="120000?">
+                </div> -->
+            <br>
+            
+                <div class="form-group col-md-6 col-lg-6">
+                    <label for="publishDateMin ">Defect date Min</label>
+                    <input type="date" class="form-control " name="date_min" id="publishDateMin ">
+                </div>
+                <div class="form-group col-md-6 col-lg-6">
+                    <label for="publishDateMax ">Defect date Max</label>
+                    <input type="date" name="date_max" class="form-control " id="publishDateMax">
+                </div>
+
+                <!-- <div class="form-group col-md-6 col-lg-6 ">
+                    <label for="location ">Location</label>
+                    <select id="location" class="form-control " name="location">
+                    <option selected>Choose...</option>
+                     {% for loc in location %}
+                     <option value="{{for}}">{{for}}</option>
+                    {% endfor %}
+                   
+                  </select>
+                </div> -->
+
+            </div>
+            <!-- <div class="form-group">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="reviewed" id="reviewed">
+                    <label class="form-check-label" for="reviewed">
+                    Reviewed
+                  </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="notReviewed" name="notReviewed">
+                    <label class="form-check-label" for="notReviewed">
+                    Not reviewed
+                  </label>
+                </div>
+            </div> -->
+            <br>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
+        <div class="container my-5">
+            <ul>
+                {% for def in queryset %}
+                <li>
+                    Process: {{ def.process }}
+                    <br>
+                    <span> Defect: {{ def.defect}}</span>
+                    <span>
+                        <br>
+                        <span> Location: {{def.location}}</span>
+                    {% for loc in def.queryset.all %}
+                      {{ loc }}
+                    {% endfor %}
+                  </span>
+                    <br>
+                    <span>Defect Date: {{ def.created }}</span>
+                    <br>
+                    <span>Photo : 
+                        {% if def.photo %}
+                        <img src ="{{ def.photo.url }}" width="30%" alt="Banner image">
+                        {%endif%}
+                    </span>
+                    <br>
+                    
+                </li>
+                <hr /> {% endfor %}
+            </ul>
+        </div>
+
+    </main>
+
+{% endblock %}

@@ -1,0 +1,198 @@
+<!-- Showing defects and filter  -->
+{% extends "inputcs/base.html" %}
+
+{% block title %} Home - Defects list {% endblock %}
+
+{% load static %}
+
+
+{% block content %}
+
+<div class="row">
+
+    <!-- <div class="col-md-12 col-lg-5 order-md-first">
+        <h4 class=""><span class="text-muted">Last 10 Defects</span> </h4>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Defect</th>
+                <th scope="col">Process</th>
+                <th scope="col">Date & Time</th>
+                <th scope="col">Period</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for i in defects %}
+              <tr>
+                <th scope="row">{{ i.id }}</th>
+                <td>{{ i.defect }}</td>
+                <td>{{ i.process }}</td>
+                <td>{{i.created|date:'Y-m-d H:i'}}</td>
+                <td>{{ i.period }}</td>
+              </tr>
+                {% endfor %}
+              
+            </tbody>
+          </table>
+    </div> -->
+
+    <div class="col-md-12s col-lg-7">
+
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted">Lexus RX - Car Body</span>
+            <!-- <span class="badge bg-secondary rounded-pill">3</span> -->
+          </h4>
+        <img src="{% static 'images/RX910.jpg' %}" id="reference-img" alt="" style="display: none"/>
+            <div>
+                <canvas width="800" height="850" id="drawing-canvas">
+    
+                </canvas>
+            </div>
+                <div style="padding-top:20px;">
+                    <div id="coord"></div>
+                </div>
+    </div>
+
+</div>
+<!-- <div class="row">
+    <div class="col-sm-1 border bg-light">    
+        <h7>Num.: </h7>
+    </div>
+    <div class="col-sm-1 border bg-light">
+            <h7> Defect </h7>
+    </div>
+    <div class="col-sm-1 border bg-light">
+        <h7> Process </h7>
+    </div>  
+    <div class="col-sm-2 border bg-light">
+        <h7> Date and Time </h7>
+    </div>  
+    <div class="col-sm-1 border bg-light">
+        <h7>Period:</h7>
+    </div>
+</div>
+{% for i in defects %}
+<div class="row flex-nowrap">
+    <div class="col-sm-1 border">    
+        <span class="text-muted"> {{ i.id }}  </span>
+    </div>
+    <div class="col-sm-1 border">
+        <span class="text-muted"> {{ i.defect }} </span>
+    </div>
+    <div class="col-sm-1 border">
+        <span class="text-muted"> {{ i.process }} </span>
+    </div>
+    <div class="col-sm-2 border">
+        <span class="text-muted"> {{i.created|date:'Y-m-d H:i'}}</span>
+    </div>
+    <div class="col-sm-1 border">
+        <span class="text-muted">{{ i.period }}</span>
+    </div>
+</div>
+    
+        {% endfor %} -->
+
+    
+<!--     
+    <div class="mt-5 col-md-5 order-md-1">
+
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted">Right Side CS </span> -->
+            <!-- <span class="badge bg-secondary rounded-pill">3</span> -->
+          <!-- </h4>
+        <img src="{% static 'inputcs/images/left_body22.jpg' %}" id="reference-img2" alt="" style="display: none"/>
+            <div>
+                <canvas height="500" id="drawing-canvas2">
+    
+                </canvas>
+            </div>
+                <div style="padding-top:20px;">
+                    <div id="coord"></div>
+                </div>
+    </div>
+</div>     -->
+
+<h2>Defect Data</h2>
+      <div class="table-responsive">
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Side</th>
+              <th scope="col">Location</th>
+              <th scope="col">Defect</th>
+              <th scope="col">Process</th>
+              <th scope="col">Date & Time</th>
+              <th scope="col">Period</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for i in defects %}
+            <tr>
+              <th scope="row">
+                <a href="{% url 'defect-detail' i.id %}">
+                    {{ i.id }}</a></th>
+              <td>{{ i.side }}</td>
+              <td>{{i.location}}</td>
+              <td>{{ i.defect }}</td>
+              <td>{{ i.process }}</td>
+              <td>{{i.created|date:'Y-m-d H:i'}}</td>
+              <td>{{ i.period }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+       
+{% endblock %}
+ {% block javascript %}
+        <script >
+    
+            var canvas;
+            var ctx;
+            var refImage;
+    
+            $(document).ready(function() {
+            canvas = document.getElementById('drawing-canvas');
+            ctx = canvas.getContext('2d');
+            refImage = document.getElementById('reference-img');
+            drawImageScaled(refImage, ctx);
+                ctx.font = '22px normal'
+                ctx.fillStyle = 'red';
+                {% for i in defects %}
+                ctx.fillText("{{ i.id }}", "{{i.coorx}}", "{{i.coory}}");
+                {% endfor %}
+            // $(canvas).click(function(e) {
+            //     const offset = $(this).offset();
+            //     const x = (e.pageX - offset.left) - 5;
+            //     const y = (e.pageY - offset.top) + 10;
+            //     ctx.font = '22px normal'
+            //     ctx.fillStyle = 'red';
+            //     ctx.fillText("{{ i.id }}", x, y);
+                // console.log(ctx, refImage)
+                // console.log(x, y);
+                // console.log(e.pageX);
+                // console.log(offset);
+            });
+    
+            function drawImageScaled(img, ctx) {
+            var canvas = ctx.canvas;
+            var hRatio = canvas.width / img.width;
+            var vRatio = canvas.height / img.height;
+            var ratio  = Math.min ( hRatio, vRatio );
+            var centerShift_x = ( canvas.width - img.width*ratio ) / 2;
+            var centerShift_y = ( canvas.height - img.height*ratio ) / 2;  
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            ctx.drawImage(img, 0,0, img.width, img.height,
+                                centerShift_x,centerShift_y,img.width*ratio, img.height*ratio);
+            }
+    
+    
+        </script>
+
+
+
+
+        {% endblock %}
